@@ -1,11 +1,11 @@
 import type {ValidatedEventAPIGatewayProxyEvent} from '@libs/api-gateway';
 import {formatJSONResponse} from '@libs/api-gateway';
 import {middyfy} from '@libs/lambda';
+import {PRODUCTS} from '../../mockData/products';
 
-const getProductsList: ValidatedEventAPIGatewayProxyEvent<void> = async (event) => {
+const getProductsList: ValidatedEventAPIGatewayProxyEvent<void> = async () => {
     return formatJSONResponse({
-        message: `Hello, welcome to the exciting getProductsList!`,
-        event,
+        content: PRODUCTS
     });
 };
 

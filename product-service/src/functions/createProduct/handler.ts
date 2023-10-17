@@ -10,6 +10,7 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 const createProduct: ValidatedEventAPIGatewayProxyEvent<void> = async (event) => {
+    console.log(event)
     const {title, price, description, count} = event.body as CreateProductRequest
 
     const uuid = uuidv4();

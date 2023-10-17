@@ -7,7 +7,8 @@ import {DynamoDBDocumentClient, ScanCommand} from "@aws-sdk/lib-dynamodb";
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
-const getProductsList: ValidatedEventAPIGatewayProxyEvent<void> = async () => {
+const getProductsList: ValidatedEventAPIGatewayProxyEvent<void> = async (event) => {
+    console.log(event)
     const productsCommand = new ScanCommand({
         TableName: "products",
     });

@@ -8,6 +8,7 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 const getProductsById: ValidatedEventAPIGatewayProxyEvent<void> = async (event) => {
+    console.log(event)
     const productCommand = new QueryCommand({
         TableName: "products",
         KeyConditionExpression: 'id = :id',

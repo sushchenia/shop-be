@@ -1,6 +1,7 @@
 import type {AWS} from '@serverless/typescript';
 
 import importProductsFile from '@functions/importProductsFile';
+import importFileParser from "@functions/importFileParser";
 
 const serverlessConfiguration: AWS = {
     service: 'import-service',
@@ -14,12 +15,62 @@ const serverlessConfiguration: AWS = {
             minimumCompressionSize: 1024,
             shouldStartNameWithService: true,
         },
+        iam: {
+            role: 'ImportService'
+        },
         environment: {
             AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
             NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
         },
     },
-    functions: {importProductsFile},
+    functions: {importProductsFile, importFileParser},
+    resources: {
+        Resources: {
+            ImportService: {
+                Type: 'AWS::IAM::Role',
+                Properties: {
+                    RoleName: 'ImportServiceS3Access',
+                    AssumeRolePolicyDocument: {
+                        Version: '2012-10-17',
+                        Statement: [
+                            {
+                                Effect: 'Allow',
+                                Principal: {
+                                    Service: ['lambda.amazonaws.com'],
+                                },
+                                Action: 'sts:AssumeRole',
+                            },
+                        ],
+                    },
+                    ManagedPolicyArns: [
+                        'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
+                    ],
+                    Policies: [
+                        {
+                            PolicyName: 'ImportServiceAccessPolicy',
+                            PolicyDocument: {
+                                Version: '2012-10-17',
+                                Statement: [
+                                    {
+                                        Effect: 'Allow',
+                                        Action: [
+                                            's3:PutObject',
+                                            's3:PutObjectAcl',
+                                            's3:GetObject',
+                                            's3:DeleteObject',
+                                        ],
+                                        Resource: [
+                                            'arn:aws:s3:::upload-products-aws-course2/*',
+                                        ],
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                },
+            },
+        },
+    },
     package: {individually: true},
     custom: {
         esbuild: {

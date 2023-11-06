@@ -9,7 +9,7 @@ const serverlessConfiguration: AWS = {
     plugins: ['serverless-esbuild'],
     provider: {
         name: 'aws',
-        runtime: 'nodejs14.x',
+        runtime: 'nodejs18.x',
         region: "eu-west-1",
         apiGateway: {
             minimumCompressionSize: 1024,
@@ -44,6 +44,7 @@ const serverlessConfiguration: AWS = {
                     },
                     ManagedPolicyArns: [
                         'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
+                        'arn:aws:iam::aws:policy/AmazonSQSFullAccess',
                     ],
                     Policies: [
                         {
@@ -78,7 +79,7 @@ const serverlessConfiguration: AWS = {
             minify: false,
             sourcemap: true,
             exclude: ['aws-sdk'],
-            target: 'node14',
+            target: 'node18',
             define: {'require.resolve': undefined},
             platform: 'node',
             concurrency: 10,
